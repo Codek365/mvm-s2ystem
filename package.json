@@ -1,0 +1,45 @@
+{
+  "name": "electron-navigation",
+  "version": "1.5.9",
+  "description": "Adds a navigation interface to electron that allows you to browse the internet or view local html files with tabs and webviews.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node_modules\\electron\\dist\\electron.exe app\\index.js"
+   
+  },
+  
+  "keywords": [
+    "address",
+    "auto",
+    "create",
+    "display",
+    "electron",
+    "html",
+    "http",
+    "internet",
+    "ipc-message",
+    "ipcRenderer",
+    "load",
+    "local",
+    "navigation",
+    "search",
+    "send",
+    "tab",
+    "tabs",
+    "view",
+    "website",
+    "webview"
+  ],
+  "author": "Jeremy England",
+  "license": "MIT",
+  "dependencies": {
+    "color.js": "^0.1.3",
+    "electron-browser-window-options": "^1.0.4",
+    "electron-context-menu": "^0.9.1",
+    "jquery": "^3.3.1",
+    "url-regex": "^4.1.1"
+  },
+  "devDependencies": {
+    "electron": "^2.0.2"
+  }
+}
