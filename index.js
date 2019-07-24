@@ -24,8 +24,6 @@ var Color = require('color.js');
 var urlRegex = require('url-regex');
 const contextMenu = require('electron-context-menu')
 var globalCloseableTabsOverride;
-
-
 /**
  * OBJECT
  */
@@ -37,14 +35,15 @@ function Navigation(options) {
         showBackButton: true,
         showForwardButton: true,
         showReloadButton: true,
-        showUrlBar: false,
+        showUrlBar: true,
         showAddTabButton: true,
         closableTabs: true,
         verticalTabs: false,
-        defaultFavicons: true,
+        defaultFavicons: false,
         newTabCallback: null,
         changeTabCallback: null,
-        newTabParams: null
+        newTabParams: null,
+        defaultLink: 'https://banhang.shopee.vn'
     };
     options = options ? Object.assign(defaults,options) : defaults;
     /**
@@ -66,35 +65,32 @@ function Navigation(options) {
     this.SVG_FAVICON = '<svg height="100%" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>';
     this.SVG_ADD = '<svg height="100%" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>';
     this.SVG_CLEAR = '<svg height="100%" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
-
-    this.LANG_BTN_ADD = 'Thêm tài khoản';
     /**
      * ADD ELEMENTS
      */
     if (options.showBackButton) {
-        $('#nav-body-ctrls').append('<i id="nav-ctrls-back" class="nav-icons cursor disabled" title="Go back">' + this.SVG_BACK + '</i>');
+        $('#nav-body-ctrls').append('<i id="nav-ctrls-back" class="nav-icons disabled" title="Go back">' + this.SVG_BACK + '</i>');
     }
     if (options.showForwardButton) {
-        $('#nav-body-ctrls').append('<i id="nav-ctrls-forward" class="nav-icons cursor disabled" title="Go forward">' + this.SVG_FORWARD + '</i>');
+        $('#nav-body-ctrls').append('<i id="nav-ctrls-forward" class="nav-icons disabled" title="Go forward">' + this.SVG_FORWARD + '</i>');
     }
     if (options.showReloadButton) {
-        $('#nav-body-ctrls').append('<i id="nav-ctrls-reload" class="nav-icons cursor disabled" title="Reload page">' + this.SVG_RELOAD + '</i>');
+        $('#nav-body-ctrls').append('<i id="nav-ctrls-reload" class="nav-icons disabled" title="Reload page">' + this.SVG_RELOAD + '</i>');
     }
     if (options.showUrlBar) {
-         $('#nav-body-ctrls').append('<input id="nav-ctrls-url" type="text" title="Enter an address or search term"/>')
+        $('#nav-body-ctrls').append('<input id="nav-ctrls-url" type="text" title="Enter an address or search term"/>')
     }
     if (options.showAddTabButton) {
-        // $('#nav-body-tabs').append('<i id="nav-tabs-add" class="nav-icons cursor " title="Add new tab">' + this.SVG_ADD + '</i>');
-        $('#nav-body-tabs').append('<li id="nav-tabs-add" class="nav-item cursor"><a class="nav-link nav-link-danger" target="_top"><i class="nav-icon icon-plus"></i><strong>' + this.LANG_BTN_ADD + '</strong></a></li>');
+        $('#nav-body-tabs').append('<i id="nav-tabs-add" class="nav-icons" title="Add new tab">' + this.SVG_ADD + '</i>');
     }
-    // /**
-    //  * ADD CORE STYLE
-    //  */
-    // if (options.verticalTabs) {
-    //     $('head').append('<style id="nav-core-styles">#nav-body-ctrls,#nav-body-tabs,#nav-body-views,.nav-tabs-tab{display:flex;align-items:center;}#nav-body-tabs{overflow:auto;min-height:32px;flex-direction:column;}#nav-ctrls-url{box-sizing:border-box;}.nav-tabs-tab{min-width:60px;width:100%;min-height:20px;}.nav-icons{fill:#000;width:24px;height:24px}.nav-icons.disabled{pointer-events:none;opacity:.5}#nav-ctrls-url{flex:1;height:24px}.nav-views-view{flex:0 1;width:0;height:0}.nav-views-view.active{flex:1;width:100%;height:100%}.nav-tabs-favicon{align-content:flex-start}.nav-tabs-title{flex:1;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nav-tabs-close{align-content:flex-end}@keyframes nav-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>');
-    // } else {
-    //     $('head').append('<style id="nav-core-styles">#nav-body-ctrls,#nav-body-tabs,#nav-body-views,.nav-tabs-tab{display:flex;align-items:center}#nav-body-tabs{overflow:auto;min-height:32px;}#nav-ctrls-url{box-sizing:border-box;}.nav-tabs-tab{min-width:60px;width:180px;min-height:20px;}.nav-icons{fill:#000;width:24px;height:24px}.nav-icons.disabled{pointer-events:none;opacity:.5}#nav-ctrls-url{flex:1;height:24px}.nav-views-view{flex:0 1;width:0;height:0}.nav-views-view.active{flex:1;width:100%;height:100%}.nav-tabs-favicon{align-content:flex-start}.nav-tabs-title{flex:1;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nav-tabs-close{align-content:flex-end}@keyframes nav-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>');
-    // }
+    /**
+     * ADD CORE STYLE
+     */
+    if (options.verticalTabs) {
+        $('head').append('<style id="nav-core-styles">#nav-body-ctrls,#nav-body-tabs,#nav-body-views,.nav-tabs-tab{display:flex;align-items:center;}#nav-body-tabs{overflow:auto;min-height:32px;flex-direction:column;}#nav-ctrls-url{box-sizing:border-box;}.nav-tabs-tab{min-width:60px;width:100%;min-height:20px;}.nav-icons{fill:#000;width:24px;height:24px}.nav-icons.disabled{pointer-events:none;opacity:.5}#nav-ctrls-url{flex:1;height:24px}.nav-views-view{flex:0 1;width:0;height:0}.nav-views-view.active{flex:1;width:100%;height:100%}.nav-tabs-favicon{align-content:flex-start}.nav-tabs-title{flex:1;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nav-tabs-close{align-content:flex-end}@keyframes nav-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>');
+    } else {
+        $('head').append('<style id="nav-core-styles">#nav-body-ctrls,#nav-body-tabs,#nav-body-views,.nav-tabs-tab{display:flex;align-items:center}#nav-body-tabs{overflow:auto;min-height:32px;}#nav-ctrls-url{box-sizing:border-box;}.nav-tabs-tab{min-width:60px;width:180px;min-height:20px;}.nav-icons{fill:#000;width:24px;height:24px}.nav-icons.disabled{pointer-events:none;opacity:.5}#nav-ctrls-url{flex:1;height:24px}.nav-views-view{flex:0 1;width:0;height:0}.nav-views-view.active{flex:1;width:100%;height:100%}.nav-tabs-favicon{align-content:flex-start}.nav-tabs-title{flex:1;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nav-tabs-close{align-content:flex-end}@keyframes nav-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>');
+    }
     /**
      * EVENTS
      */
@@ -146,13 +142,12 @@ function Navigation(options) {
         else if(options.newTabParams instanceof Array){
             params = options.newTabParams
         } else {
-            params = ['https://banhang.shopee.vn/', {
+            params = [options.defaultLink, {
                 close: options.closableTabs,
-                icon: "default"
+                icon: NAV.TAB_ICON
             }];
         }
         NAV.newTab(...params);
-        console.log('heloo');
     });
     //
     // go back
@@ -195,7 +190,7 @@ function Navigation(options) {
             if (e.shiftKey) {
                 NAV.newTab(this.value, {
                     close: options.closableTabs,
-                    icon: "default"
+                    icon: NAV.TAB_ICON
                 });
             } else {
                 if ($('.nav-tabs-tab').length) {
@@ -203,7 +198,7 @@ function Navigation(options) {
                 } else {
                     NAV.newTab(this.value, {
                         close: options.closableTabs,
-                        icon: "default"
+                        icon: NAV.TAB_ICON
                     });
                 }
             }
@@ -354,7 +349,7 @@ function Navigation(options) {
         webview[0].addEventListener("new-window", (res) => {
             if (!(options.newWindowFrameNameBlacklistExpression instanceof RegExp && options.newWindowFrameNameBlacklistExpression.test(res.frameName))) {
                 NAV.newTab(res.url, {
-                    icon: "default"
+                    icon: NAV.TAB_ICON
                 });
             }
         });
@@ -422,7 +417,7 @@ Navigation.prototype.newTab = function (url, options) {
         id: null, // null, 'yourIdHere'
         node: false,
         webviewAttributes: {},
-        icon: "./img/favicon.ico", // 'default', 'clean', 'c:\location\to\image.png'
+        icon: "clean", // 'default', 'clean', 'c:\location\to\image.png'
         title: "default", // 'default', 'your title here'
         close: true,
         readonlyUrl: false,
@@ -458,10 +453,10 @@ Navigation.prototype.newTab = function (url, options) {
         return false;
     }
     // build tab
-    var tab = '<li class="nav-item nav-tabs-tab active" data-session="' + this.SESSION_ID + '">';
+    var tab = '<span class="nav-tabs-tab active" data-session="' + this.SESSION_ID + '">';
     // favicon
     if (options.icon == 'clean') {
-        tab += '<i class=" nav-tabs-favicon nav-icons">' + this.SVG_FAVICON + '</i>';
+        tab += '<i class="nav-tabs-favicon nav-icons">' + this.SVG_FAVICON + '</i>';
     } else if (options.icon === 'default') {
         tab += '<img class="nav-tabs-favicon nav-icons" src=""/>';
     } else {
@@ -475,18 +470,22 @@ Navigation.prototype.newTab = function (url, options) {
     }
     // close
     if (options.close && globalCloseableTabsOverride) {
-        tab += '<i class="nav-tabs-close nav-icons cursor">' + this.SVG_CLEAR + '</i>';
+        tab += '<i class="nav-tabs-close nav-icons">' + this.SVG_CLEAR + '</i>';
     }
     // finish tab
     tab += '</span>';
     // add tab to correct position
     if ($('#nav-body-tabs').has('#nav-tabs-add').length) {
-        $('#nav-tabs-add').after(tab);
+        $('#nav-tabs-add').before(tab);
     } else {
         $('#nav-body-tabs').append(tab);
     }
-    // add webview    
-    let composedWebviewTag = `<webview class="nav-views-view active" data-session="${this.SESSION_ID}" src="${this._purifyUrl(url)}"`;
+    // add webview    o
+    
+    var d = new Date();
+    var n = d.getTime();
+
+    let composedWebviewTag = `<webview partition="persist:wv-` + n + `"  class="nav-views-view active" data-session="${this.SESSION_ID}" src="${this._purifyUrl(url)}"`;
     
     composedWebviewTag += ` data-readonly="${((options.readonlyUrl) ? 'true': 'false')}"`;
     if (options.id) {
@@ -500,7 +499,6 @@ Navigation.prototype.newTab = function (url, options) {
             composedWebviewTag += ` ${key}="${options.webviewAttributes[key]}"`;
         });
     }
-    
     $('#nav-body-views').append(`${composedWebviewTag}></webview>`);    
     // enable reload button
     $('#nav-ctrls-reload').removeClass('disabled');

@@ -80,6 +80,16 @@ header {
     cursor: pointer;
 }
 
+.nav-tabs-tab:hover {
+    text-decoration-line: underline;
+}
+
+li.nav-item.nav-tabs-tab.active {
+    text-decoration-line: underline !important;
+    color: #2f353a;
+    background: white !important;
+}
+
 .nav-item .nav-tabs-tab,   
 .nav-tabs-title {
     cursor: pointer !important;

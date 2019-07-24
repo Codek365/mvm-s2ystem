@@ -1,13 +1,11 @@
 const {
     app,
-    BrowserWindow, 
-    session, 
+    BrowserWindow
   } = require('electron');
   
-  let win;
 
   // const ses = session.fromPartition('persist:name')
-
+  
   
   app.on('ready', () => {
   
@@ -37,8 +35,30 @@ const {
 
     
 
-    const ses = win.webContents.session
-    console.log(ses.getUserAgent())
+    win.webContents.session.setCertificateVerifyProc((request, callback) => {
+      const { hostname } = request
+      console.log('sgdkgasjkdgkjas');
+      
+      if (hostname === 'banhang.shopee.vn') {
+        callback(0)
+      } else {
+        callback(-2)
+      }
+    })
+
+    // const enav = new (require('../index.js'))({            
+    //       showBackButton: true,
+    //       showForwardButton: true,
+    //       showReloadButton: true,
+    //       showUrlBar: true,
+    //       showAddTabButton: true,
+    //       closableTabs: true,
+    //       verticalTabs: true,
+    //       defaultFavicons: true,
+    //       newTabCallback: null,
+    //       changeTabCallback: null,
+    //       newTabParams: null           
+    //   });  
     
     
   });
